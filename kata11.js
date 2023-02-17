@@ -27,19 +27,19 @@ const sphereVolume = function (radius) {
   return ((4/3) * PI * Math.pow(radius, 3));
 }
 
-console.log('1: ', 4186 < sphereVolume(10) && sphereVolume(10) < 4189);
+console.log(4186 < sphereVolume(10) && sphereVolume(10) < 4189);
 
 const coneVolume = function (radius, height) {
   return  ((PI * radius * radius * height) / 3);  
 }
 
-console.log('2: ', 45 < coneVolume(3, 5) && coneVolume(3, 5) < 49);
+console.log(45 < coneVolume(3, 5) && coneVolume(3, 5) < 49);
 
 const prismVolume = function (height, width, depth) {
   return ( height * (width * depth));
 }
 
-console.log('3: ', prismVolume(3, 4, 5) === 60);
+console.log(prismVolume(3, 4, 5) === 60);
 
 
 //expected:
@@ -88,4 +88,4 @@ const duck = [
   cone
 ]
 
-console.log('duck: ', 272000 < totalVolume(duck) && totalVolume(duck) < 275000);
+console.log(272000 < totalVolume(duck) && totalVolume(duck) < 275000);

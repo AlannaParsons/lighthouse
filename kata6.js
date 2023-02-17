@@ -29,12 +29,10 @@ is AVAILABLE, while lower-case letters mean that the spot is UNAVAILABLE.
 //   input - 
 //      spots : an array of arrays representing parking spots
 //      vehicle : string with type of the vehicle
-//   output - that string with all of the whitespace characters converted to %20
+//   output - array w [X, Y] coordinates or available space
 const whereCanIPark = function (spots, vehicle) {
   for (let row in spots){
-    //console.log(spots[row]);
     for (let column in spots[row]){
-      //console.log(spots[row][column]);
       if (spots[row][column] === 'R'){
         return [column, row];
       }

@@ -31,7 +31,6 @@ console.log(instructorWithLongestName([
 //   input - 
 //          data : array of objects
 //   output - single object w longest name value
-
 function instructorWithLongestName(instructors) {
   let longestName =   {name: "", course: ""};
   for (let courses of instructors){

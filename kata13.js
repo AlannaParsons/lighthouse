@@ -63,7 +63,7 @@ const ordinal = function(day) {
     default:
       return 'th';
   };
-}
+};
 
 
 console.log(talkingCalendar("2017/12/02"));

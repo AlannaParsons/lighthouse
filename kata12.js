@@ -23,7 +23,6 @@ finding matching values in 2 arrays
 
 */
 
-//
 //expected:
 //   input - 
 //      bakeryA : array of ingredients
@@ -34,9 +33,9 @@ const chooseRecipe = function(bakeryA, bakeryB, recipes) {
   for (let recipe of recipes){
     if (ingredientCheck(bakeryA, recipe) && ingredientCheck(bakeryB, recipe)){
       return recipe.name;
-    }
-  }
-}
+    };
+  };
+};
 
 //expected:
 //   input - 
@@ -45,8 +44,8 @@ const chooseRecipe = function(bakeryA, bakeryB, recipes) {
 //   output - bool based on array state
 const ingredientCheck = function(bakery, recipe){
   // ** used source. checks for matching values in 2 arrays
-  return Boolean((recipe.ingredients.filter((obj) => bakery.indexOf(obj) !== -1)).length)
-}
+  return Boolean((recipe.ingredients.filter((obj) => bakery.indexOf(obj) !== -1)).length);
+};
 
 let bakeryA = ['saffron', 'eggs', 'tomato paste', 'coconut', 'custard'];
 let bakeryB = ['milk', 'butter', 'cream cheese'];
