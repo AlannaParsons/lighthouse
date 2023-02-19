@@ -33,7 +33,7 @@ help with accessing an array circularly
 */
 
 /**
- * generateBoard(whiteQueen, blackQueen) string codification
+ * blocksAway(directions)
  *
  * @param {array} directions - array of directions
  * @return {object} final location
@@ -64,13 +64,13 @@ const blocksAway = function(directions) {
  *
  * @param {string} direction - previous trajectory 'n','e','s','w'
  * @param {num} turn - may be 1 or -1 depending on r or l turn
- * @return {string} current trajectory
+ * @return {string} current trajectory 'n','e','s','w'
 */ 
 const changeDirection = function(direction,turn) {
   let compass = ['n','e','s','w'];
   let i = compass.indexOf(direction)+turn;
   let len = compass.length;
-  //circular iteration w compass
+  //circular iteration w compass. citation in header
   let newDirection = compass[(i % len + len) % len];
   
   return newDirection;
@@ -94,7 +94,7 @@ const updateLocation = function(distanceAway, speed, newDirection) {
       return distanceAway.north -= speed;
     case 'w':
       return distanceAway.east -=speed;
-  }
+  };
 }
 
 console.log(blocksAway(["right", 2, "left", 3, "left", 1]));
