@@ -23,12 +23,12 @@ Instruction
  * @return {string} words from array -> string
 */
 const joinList = function(words) {
-  arrStr = '';
-  for (word of words) {
+  let arrStr = '';
+  for (let word of words) {
     arrStr += (word === words[words.length - 1]) ? word : word + ', ';
   }
   return arrStr;
-}
+};
 
 // Test / Driver Code below...
 const conceptList = ["gists", "types", "operators", "iteration", "problem solving"];
