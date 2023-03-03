@@ -19,7 +19,7 @@ Rolled 3 dice: 2, 6, 5
 
 // expects 1 arg, strips anything else
 const args = process.argv;
-const arg = args[2]
+const arg = args[2];
 
 /**
  * rollDice(max)
@@ -34,9 +34,9 @@ const rollDice = function(rolls) {
   let numbers = [];
 
   for (let i = 0; i < rolls; i++) {
-    numbers.push(Math.floor(Math.random() * (max - min) + min))
+    numbers.push(Math.floor(Math.random() * (max - min) + min));
   }
   return `Rolled ${rolls} dice: ${numbers.join(', ')}`;
-}
+};
 
 console.log(rollDice(arg));
