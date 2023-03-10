@@ -5,7 +5,7 @@ Lighthouse labs - prep work
 Feb 12 2023
 -------------------------------------------------------------
 Organizing Instructors
-In this exercise, we will be given a list of instructors and we 
+In this exercise, we will be given a list of instructors and we
 will create a single object to organize them based on their course.
 
 ex: {
@@ -15,16 +15,15 @@ ex: {
 */
 
 //expected:
-//   input - 
+//   input -
 //      instructors : array (instructor objects)
 //   output - obj (key = course. value = instructor array)
 const organizeInstructors = function(instructors) {
   let organizedCourses = {};
   for (let obj of instructors){
-    if (organizedCourses[obj.course]){   
+    if (organizedCourses[obj.course]){
       organizedCourses[obj.course].push(obj.name);
-    };
-    else{
+    } else {
       organizedCourses[obj.course] = [obj.name];
     };
   };
