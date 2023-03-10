@@ -11,24 +11,26 @@ returns true or false, based on a perfect match.
 */
 
 /**
- * eqArrays(arr1, arr2)
+ * eqArrays(arr1, arr2) - takes in two arrays returns true or false
+ *  based on a perfect match
  *
  * @param {array} arr1
  * @param {array} arr2
  * @return {boolean}
 */
 const eqArrays = function(arr1, arr2) {
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+
   for (let i = 0; i <= arr1.length; i++) {
-    if (arr1[i] === arr2[i]) {
-      continue;
-    } else {
+    if (arr1[i] !== arr2[i]) {
       return false;
     }
   }
-  // check if array 2 is longer
-  return arr1.length === arr2.length;
 
-}
+  return true;
+};
 
 /**
  * assertEqual(actual, expected)
@@ -50,11 +52,11 @@ const assertEqual = function(actual, expected) {
 };
 
 // TEST CODE
-eqArrays([1, 2, 3], [1, 2, 3]) // => true
-eqArrays([1, 2, 3], [3, 2, 1]) // => false
+eqArrays([1, 2, 3], [1, 2, 3]); // => true
+eqArrays([1, 2, 3], [3, 2, 1]); // => false
 
-eqArrays(["1", "2", "3"], ["1", "2", "3"]) // => true
-eqArrays(["1", "2", "3"], ["1", "2", 3]) // => false
+eqArrays(["1", "2", "3"], ["1", "2", "3"]); // => true
+eqArrays(["1", "2", "3"], ["1", "2", 3]); // => false
 
 assertEqual(eqArrays([1, 2, 3], [1, 2, 3]), true); // => should PASS
 assertEqual(eqArrays(["1", "2", "3"], ["1", "2", 3]), false); // => should PASS
