@@ -2,11 +2,11 @@
 -------------------------------------------------------------
 Alanna Parsons
 Lighthouse labs
-Mar 10 2023
+Mar 16 2023
 -------------------------------------------------------------
 Instruction
 
-Implement the definition for function eqObjects which will take
+Implement the definition for function eqObjArr which will take
 in two objects and returns true or false, based on a perfect match.
 
 In this simple scenario, two objects are equal when:
@@ -19,32 +19,35 @@ The value for each key in one object is the same as the value for
 
 // ACTUAL FUNCTION
 /**
- * eqObjects(object1, object2) - Returns true if both objects have
+ * eqObjArr(item1, item2) - Returns true if both objects/arrays have
  * identical keys with identical values
  *
  * currently handles arrays as values but not objects as values
  *
- * @param {object} object1
- * @param {object} object2
+ * @param {object|array} item1
+ * @param {object|array} item2
  * @return {boolean}
 */
-const eqObjects = function(object1, object2) {
-  //check length comparison
-  if ((Object.keys(object1)).length !== (Object.keys(object2)).length) {
-    return false;
-  }
-  for (let key in object1) {
-    //check vals for arrays & do necessary compare
-    if (Array.isArray(object1[key]) && Array.isArray(object2[key])) {
-      if (!eqArrays(object1[key], object2[key])) {
+
+const eqObjArr = function(item1, item2) {
+  let nestedState;
+
+  for (let key in item1) {
+    //will catch object and array types
+    if (typeof item1[key] === "object" && typeof item2[key] === "object") {
+      if (!eqArrays(Object.keys(item1[key]), Object.keys(item2[key]))) {
         return false;
+
+      } else {
+        nestedState = eqObjArr(item1[key], item2[key]);
+        if (!nestedState) return false
       }
-    } else if (object1[key] !== object2[key]) {
+    } else if (item1[key] !== item2[key] || Object.keys(item1).length !== Object.keys(item2).length) {
       return false;
     }
   }
   return true;
-};
+}
 
 /**
  * eqArrays(arr1, arr2) - takes in two arrays returns true or false
@@ -61,6 +64,7 @@ const eqArrays = function(arr1, arr2) {
 
   for (let i = 0; i <= arr1.length; i++) {
     if (arr1[i] !== arr2[i]) {
+      //console.log('no match:',arr1[i],arr2[i]);
       return false;
     }
   }
@@ -89,17 +93,35 @@ const assertEqual = function(actual, expected) {
 
 
 //TEST
-/*
+
 const shirtObject = { color: "red", size: "medium" };
 const anotherShirtObject= { size: "medium", color: "red" };
-assertEqual(eqObjects(shirtObject , anotherShirtObject), true);
+assertEqual(eqObjArr(shirtObject , anotherShirtObject), true);
 
 const longSleeveShirtObject= { size: "medium", color: "red", sleeveLength: "long" };
-assertEqual(eqObjects(shirtObject , longSleeveShirtObject), false);
-*/
+assertEqual(eqObjArr(shirtObject , longSleeveShirtObject), false);
+
 const multiColorShirtObject = { colors: ["red", "blue"], size: "medium" };
 const anotherMultiColorShirtObject = { size: "medium", colors: ["red", "blue"] };
-assertEqual(eqObjects(multiColorShirtObject  , anotherMultiColorShirtObject), true);
+assertEqual(eqObjArr(multiColorShirtObject  , anotherMultiColorShirtObject), true);
 
 const longSleeveMultiColorShirtObject = { size: "medium", colors: ["red", "blue"], sleeveLength: "long" };
-assertEqual(eqObjects(multiColorShirtObject  , longSleeveMultiColorShirtObject), false);
+assertEqual(eqObjArr(multiColorShirtObject  , longSleeveMultiColorShirtObject), false);
+
+
+//TESTS!!
+assertEqual(eqObjArr({ a: { z: 1 }, b: 2 }, { a: { z: 1 }, b: 3 }), false);
+assertEqual(eqObjArr({ a: { y: 0, z: 1 }, b: 2 }, { a: { z: 1 }, b: 2 }), false);
+assertEqual(eqObjArr({ a: { y: 0, z: 1 }, b: 2 }, { a: 1, b: 2 }), false);
+assertEqual(eqObjArr([1, 2, 3, 4, 5],[1, 2, 3, 4, 5]), true); //	15
+assertEqual(eqObjArr([1, 2, 8, 4, 5],[1, 2, 3, 4, 5]), false); //	15
+assertEqual(eqObjArr([1, 2, 3, 4, 5],[1, 2, 3, 4, 5, 6]), false); //	15
+assertEqual(eqObjArr([[1, 2, [[3], 4]], 5, []],[[1, 2, [[3], 4]], 5, []]), true);
+assertEqual(eqObjArr([[1, 2, [[3], 4]], 5, []],[[1, 2, [[], 4]], 5, []]), false);
+assertEqual(eqObjArr([[1, 2, [[3], 4]], 5, []], [[1, 2, [[3], 0]], 5, []]), false);
+assertEqual(eqObjArr([[1, 2, [[3], 4]], 5, []],[[1, 2, [[3], 4]], []]), false);
+assertEqual(eqObjArr([[[[[[[[[[[[[1]]]]]]]]]]]]], [[[[[[[[[[[[[1]]]]]]]]]]]]]), true);
+assertEqual(eqObjArr([[[[[[[[[[[[[1]]]]]]]]]]]]], [[[[[[[[[[[[[], 1]]]]]]]]]]]]), false);
+assertEqual(eqObjArr([[2, 3], [4]], [[2, 3], [4]]), true) // => true
+assertEqual(eqObjArr([[2, 3], [4]], [[2, 3], [4, 5]]), false) // => false
+assertEqual(eqObjArr([[2, 3], [4]], [[2, 3], 4]), false) // => false
