@@ -29,21 +29,17 @@ that could be made. If no profit could have been made, return -1.
  * @return {number}
 */
 const maxProfit = function(array) {
-  let buy = 0;
-  let sell = 0;
   let max = 0;
 
-  //for (let buy of array) {
+  //for (let buy of array) 
   for (let i = 0; i < array.length ; i++) {
-    //for (let sell of array) {
+    //for (let sell of array) 
     for (let j = i + 1; j < array.length ; j++) {
-      //max = (sell - buy) > max ? sell - buy : max;
       max = (array[j] - array[i]) > max ? array[j] - array[i] : max;
       console.log('buy:',array[i],'  sell:',array[j], '  max:',max);
-
     }
   }
-
+  return max;
 }
 
 maxProfit([45, 24, 35, 31, 40, 38, 11]);
