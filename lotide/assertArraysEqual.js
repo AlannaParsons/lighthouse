@@ -6,6 +6,8 @@ Mar 6 2023
 -------------------------------------------------------------
 Instruction
 
+Refactor function - Mar 23 - export function
+
 Implement assertArraysEqual which will take in two arrays and
 console.log an appropriate message to the console.
 
@@ -18,6 +20,8 @@ Assertion Failed: [actual] !== [expected] (but with the values filled in)
 
 */
 
+const eqArrays = require('./eqArrays');
+
 /**
  * assertArraysEqual(arr1, arr2) - takes in two arrays for comparison
  *  console log based on a perfect match
@@ -28,6 +32,7 @@ Assertion Failed: [actual] !== [expected] (but with the values filled in)
  * @return {undefined}
 */
 const assertArraysEqual = function(arr1, arr2, expected) {
+
   const badEmoji = String.fromCodePoint(0x1F4A9);
   const goodEmoji = String.fromCodePoint(0x1F638);
   const goodMsg = `${goodEmoji}${goodEmoji}${goodEmoji}` +
@@ -38,30 +43,4 @@ const assertArraysEqual = function(arr1, arr2, expected) {
   console.log(eqArrays(arr1, arr2) === expected ? goodMsg : badMsg);
 };
 
-/**
- * eqArrays(arr1, arr2) - takes in two arrays returns true or false
- *  based on a perfect match
- *
- * @param {array} arr1
- * @param {array} arr2
- * @return {boolean}
-*/
-const eqArrays = function(arr1, arr2) {
-  if (arr1.length !== arr2.length) {
-    return false;
-  }
-
-  for (let i = 0; i <= arr1.length; i++) {
-    if (arr1[i] === arr2[i]) {
-      continue;
-    } else {
-      return false;
-    }
-  }
-  return true;
-};
-
-assertArraysEqual(["1", "2", "3"], ["1", "2", 3], false); // => should PASS
-assertArraysEqual([1, 2, 3], [3, 2, 1], false); // => should PASS
-assertArraysEqual([1, 2, 3], [1, 2, 3], true); // => should PASS
-assertArraysEqual([1, 2, 3], [1, 2, 3, 4], false); // => should PASS
+module.exports = assertArraysEqual;

@@ -13,6 +13,9 @@ Assertion Passed: [actual] === [expected] (but with the values filled in)
 Otherwise it should print (console.log) the following:
 Assertion Failed: [actual] !== [expected] (but with the values filled in)
 
+Instruction
+Refactor function - Mar 23 - export function
+
 putting emojis in string ->
 https://stackoverflow.com/questions/46043330/how-to-insert-emoticons-chars-into-js-script
 emojis ->
@@ -25,8 +28,8 @@ https://unicode.org/emoji/charts/full-emoji-list.html#1f600
  *
  * @param {(string|number)} actual - A string param
  * @param {(string|numer)} expected - A string param
- * @return {undefined} 
-*/ 
+ * @return {undefined}
+*/
 const assertEqual = function(actual, expected) {
   const badEmoji = String.fromCodePoint(0x1F4A9);
   const goodEmoji = String.fromCodePoint(0x1F638);
@@ -39,6 +42,4 @@ const assertEqual = function(actual, expected) {
   }
 };
 
-// TEST CODE
-assertEqual("Lighthouse Labs", "Bootcamp");
-assertEqual(1, 1);
+module.exports = assertEqual;

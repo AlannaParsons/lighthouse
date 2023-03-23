@@ -8,6 +8,8 @@ Instruction
 Implement a function eqArrays which takes in two arrays and
 returns true or false, based on a perfect match.
 
+Refactor function - Mar 23 - export function
+
 */
 
 /**
@@ -32,33 +34,4 @@ const eqArrays = function(arr1, arr2) {
   return true;
 };
 
-/**
- * assertEqual(actual, expected)
- *
- * @param {(string|number)} actual - A string param
- * @param {(string|number)} expected - A string param
- * @return {undefined}
-*/
-const assertEqual = function(actual, expected) {
-  const badEmoji = String.fromCodePoint(0x1F4A9);
-  const goodEmoji = String.fromCodePoint(0x1F638);
-  if (actual === expected) {
-    console.log(`${goodEmoji}${goodEmoji}${goodEmoji}` +
-    ` Assertion Passed: ${actual} === ${expected}`);
-  } else {
-    console.log(`${badEmoji}${badEmoji}${badEmoji}` +
-    ` Assertion Failed: ${actual} !== ${expected}`);
-  }
-};
-
-// TEST CODE
-eqArrays([1, 2, 3], [1, 2, 3]); // => true
-eqArrays([1, 2, 3], [3, 2, 1]); // => false
-
-eqArrays(["1", "2", "3"], ["1", "2", "3"]); // => true
-eqArrays(["1", "2", "3"], ["1", "2", 3]); // => false
-
-assertEqual(eqArrays([1, 2, 3], [1, 2, 3]), true); // => should PASS
-assertEqual(eqArrays(["1", "2", "3"], ["1", "2", 3]), false); // => should PASS
-assertEqual(eqArrays([1, 2, 3], [3, 2, 1]), false); // => should PASS
-assertEqual(eqArrays([1, 2, 3], [1, 2, 3, 4]), false); // => should PASS
+module.exports = eqArrays;
