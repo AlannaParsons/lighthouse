@@ -6,7 +6,6 @@ Mar 10 2023
 -------------------------------------------------------------
 Instruction
 
-Instruction
 Implement the function findKeyByValue which takes in an object
 and a value. It should scan the object and return the first key
 which contains the given value. If no key with that given value is
@@ -30,32 +29,4 @@ const findKeyByValue = function(obj, val) {
   }
 };
 
-
-/**
- * assertEqual(actual, expected)
- *
- * @param {(string|number)} actual - A string param
- * @param {(string|number)} expected - A string param
- * @return {undefined}
-*/
-const assertEqual = function(actual, expected) {
-  const badEmoji = String.fromCodePoint(0x1F4A9);
-  const goodEmoji = String.fromCodePoint(0x1F638);
-  if (actual === expected) {
-    console.log(`${goodEmoji}${goodEmoji}${goodEmoji}` +
-    ` Assertion Passed: ${actual} === ${expected}`);
-  } else {
-    console.log(`${badEmoji}${badEmoji}${badEmoji}` +
-    ` Assertion Failed: ${actual} !== ${expected}`);
-  }
-};
-
-//TEST
-const bestTVShowsByGenre = {
-  sci_fi: "The Expanse",
-  comedy: "Brooklyn Nine-Nine",
-  drama:  "The Wire"
-};
-
-assertEqual(findKeyByValue(bestTVShowsByGenre, "The Wire"), "drama");
-assertEqual(findKeyByValue(bestTVShowsByGenre, "That '70s Show"), undefined);
+module.exports = findKeyByValue;
