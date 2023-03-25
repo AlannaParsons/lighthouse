@@ -40,8 +40,8 @@ if (argArray.length > 0) {
     if (time>0) {
       setTimeout(function() {
         process.stdout.write('\x07');
-        console.log(time, ' seconds')
-      }, time * 1000)
+        console.log(time, ' seconds');
+      }, time * 1000);
     }
   }
 }
