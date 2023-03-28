@@ -1,37 +1,35 @@
-// client.jf for snake_project
+// connect.js for fetcher (?)
 /*
 -------------------------------------------------------------
 Alanna Parsons
 Lighthouse labs
-Mar 26 2023
+Mar 27 2023
 -------------------------------------------------------------
 
 Instruction
 set up connection w given server
 
 */
-const { IP, PORT, userName } = require("./constants");
+//const { IP, PORT } = require("./constants");
+
+
+// hardcodinf for now =>
+// > node fetcher.js http://www.example.edu/ ./index.html
 
 const connect = function () {
   const net = require("net");
   const conn = net.createConnection({
-    host: IP,
-    port: PORT,
+    host: 'www.example.edu',
+    port: 80, // hardcode for http:// (fix later)
   });
 
   // interpret incoming data as text
   conn.setEncoding("utf8");
-
-  conn.on("connect", () => {
-    console.log('Successfully connected to game server');
-    conn.write(`Name: ${userName}`);
-
-  });
 
   conn.on("data", (data) => {
     console.log("Server says: ", data);
   });
   return conn;
 };
-
+connect();
 module.exports = { connect };
