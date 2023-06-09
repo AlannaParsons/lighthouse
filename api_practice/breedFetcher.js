@@ -38,7 +38,6 @@ const fetchBreedDescription = function(breedName, callback) {
     if (error || data.length <= 0){
       callback(new Error('Cat breed not found'), null);
     } else {
-      console.log(data[0].description);
       callback(null, data[0].description);
     }
   })
