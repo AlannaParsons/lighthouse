@@ -1,21 +1,21 @@
 // index.js
-const { fetchMyIP, fetchCoordsByIP } = require('./iss');
-let ip = '42';
 
-fetchMyIP((error, ip) => {
+const { nextISSTimesForMyLocation } = require('./iss');
+
+/**
+ * nextISSTimesForMyLocation(callback) - retrieve the next 5 pass (fly over) times for the ISS.
+ * Next pass at Fri Jun 01 2021 13:01:35 GMT-0700 (Pacific Daylight Time) for 465 seconds!
+ *
+ * @param {function} callback - A callback (to pass back an error or the array of resulting data)
+ * @return {null} - printer function
+*/
+nextISSTimesForMyLocation((error, passTimes) => {
   if (error) {
-    console.log("It didn't work!" , error);
-    return;
+    return console.log("It didn't work!", error);
   }
 
-  console.log('It worked! Returned IP:' , ip);
-});
-
-fetchCoordsByIP(ip, (error, data) => {
-  if (error) {
-    console.log("It didn't work! " , error);
-    return;
+  for (let passTime of passTimes) {
+  var date = new Date(passTime.risetime * 1000);
+  console.log(`Next pass at ${date.toLocaleString()} for ${passTime.duration} seconds!`);
   }
-
-  console.log('It worked! Returned coordinates - latitude:' , data[0], ' longitude:', data[1]);
 });
