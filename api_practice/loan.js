@@ -1,0 +1,51 @@
+// loan.js
+/*
+-------------------------------------------------------------
+Alanna Parsons
+Lighthouse labs
+June 19 2023
+-------------------------------------------------------------
+rewrite code from iss.js to use promises instead of callbacks
+
+fetch local IP using API
+use IP to pull coordinates from API(latitude, longtitude)
+use coordinates to get passover info of ISS from API
+*/
+
+let creditLimit = 70;
+
+
+/**
+ * loanOut(amount) -
+ *
+ * @param {} amount - number of dollars to loan out
+ * @return {promise} - Promise of loan which may or may not fulfill, based on remaining credit.
+ * If creditLimit is less than the requested amount, only the remaining limit
+ * is loaned out, otherwise the full amount is loaned out. If $0 remain in
+ * the limit, the loan request is rejected (error!).
+ */
+const loanOut = function(amount) {
+
+  return new Promise((resolve, reject) => {
+
+    if (creditLimit - amount < 0) {
+      reject(`Insufficient funds. $ ${creditLimit} available`);
+
+    } else {
+      creditLimit -= amount;
+      resolve(amount);
+    }
+
+
+  });
+
+};
+
+console.log("Asking for $150, which should be okay ...");
+loanOut(150)
+  .then((amountReceived) => {
+    console.log(`\t-> I got $${amountReceived} loan from the bank! Remaining Credit Limit: $${creditLimit}`);
+  })
+  .catch((err) => {
+    console.log(`\t-> Error: ${err}!`);
+  });
