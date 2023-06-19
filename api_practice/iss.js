@@ -8,6 +8,8 @@ fetch local IP using API
 use IP to pull coordinates from API(latitude, longtitude)
 use coordinates to get passover info of ISS from API
 
+create callback hell to be fixed later
+
 ** left testing logs for now
 */
 
@@ -106,6 +108,15 @@ const fetchISSFlyOverTimes = function(coordinates, callback) {
   })
 }
 
+/**
+ * nextISSTimesForMyLocation(callback) -
+ * call all functions... poorly
+ *
+ * @param {function} callback - A callback (to pass back an error or the array of resulting data)
+ * @return {error|array} - An error, if any (nullable)
+ *                  - The fly over times as an array of objects (null if error). Example:
+ *     [ { risetime: 134564234, duration: 600 }, ... ]
+*/
 const nextISSTimesForMyLocation = function(callback) {
 
   fetchMyIP((error, ip) => {
