@@ -5,11 +5,7 @@ Alanna Parsons
 Lighthouse labs
 June 19 2023
 -------------------------------------------------------------
-rewrite code from iss.js to use promises instead of callbacks
 
-fetch local IP using API
-use IP to pull coordinates from API(latitude, longtitude)
-use coordinates to get passover info of ISS from API
 */
 
 let creditLimit = 70;
