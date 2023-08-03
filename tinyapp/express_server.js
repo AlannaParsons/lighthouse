@@ -47,19 +47,39 @@ app.get("/u/:id", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+
+
+//POST /urls/:id/delete
+//After the resource has been deleted, redirect the client back to the urls_index page ("/urls").
+app.post("/urls/:id/delete", (req, res) => {
+  delete urlDatabase[req.params.id]
+  res.redirect("/urls");
+
+})
+
+app.post("/u/:id", (req, res) => {
+  console.log('post to urls/u/id');
+
+  urlDatabase[req.params.id] = req.body.newURL;
+  res.redirect("/urls");
+
+});
+// add https and .com or request from user???
 app.post("/urls", (req, res) => {
+  longURLInput = 'http://www.' + req.body.longURL;
 //validation. could add pop up error message for user, or change redirect
-  if (!Object.values(urlDatabase).includes(req.body.longURL)){
+  if (!Object.values(urlDatabase).includes(longURLInput)){
     const shortURL = generateRandomString();
     const goURL = `/u/${shortURL}`;
 
-    urlDatabase[shortURL] = req.body.longURL;
+    urlDatabase[shortURL] = longURLInput;
     res.redirect(goURL);
   } else {
   //console.log('this url already exists');
   res.redirect("/urls/new");
   }
 });
+
 
 //https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
 function generateRandomString() {
