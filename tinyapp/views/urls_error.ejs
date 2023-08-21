@@ -20,26 +20,8 @@
 
   <body>
     <%- include('partials/_header') %>
-
     <main style="margin: 1em;">
-      <h3>Create TinyURL</h3>
-      <form class="form-inline" action="/urls/new" method="POST">
-        <div class="form-group mb-2">
-          <% if (user) { %>
-            <label for="longURL">Enter a URL:</label>
-            <input
-              class="form-control"
-              type="text"
-              name="longURL"
-              placeholder="http://"
-              style="width: 300px; margin: 1em"
-            />
-            <button type="submit" class="btn btn-primary">Submit</button>
-          <% } else { %>
-            <h3>Please loggin before submitting URL</h3>
-          <% } %>
-        </div>
-      </form>
+      <h3><%= errorMsg %></h3>
     </main>
     <!-- Bootstrap JS -->
     <script
