@@ -27,6 +27,7 @@ will therefore have to properly store users as well.
 -- FIX
 certain error should be status, some should be viewable to user. identify and change
 no log term user/data storage
+ get login and register breaksn if cookies are saved but server resets....
 */
 
 
@@ -35,12 +36,23 @@ const app = express();
 const PORT = 8080; // default port 8080
 
 const bcrypt = require("bcryptjs");
-const cookieParser = require('cookie-parser');
+//const cookieParser = require('cookie-parser');
+//const cookieParser = require('cookie-session');
+const cookieSession = require('cookie-session');
+const { urlBelongsToUser, loggedIn, exists, manyexists, generateRandomString } = require("./helpers");
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 //var app = express()
-app.use(cookieParser())
+//app.use(cookieSession())
+//look into keys further. function???
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2'],
+
+  // Cookie Options
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}))
 
 // const urlDatabase = {
 //   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -95,14 +107,15 @@ app.listen(PORT, () => {
 app.get("/urls", (req, res) => {
   if (loggedIn) {
     //get urls from database w login info
-    let logginID =  req.cookies["user_id"];
+    //let logginID =  req.cookies["user_id"];
+    let logginID =  req.session.user_id;
     const userUrls = manyexists(urlDatabase, 'userID', logginID);
-    const templateVars = { urls: userUrls, user: users[req.cookies["user_id"]] };
+    const templateVars = { urls: userUrls, user: users[req.session.user_id] };
     res.render("urls_index", templateVars);
 
 
   } else {
-    const templateVars = { user: users[req.cookies["user_id"]], errorMsg: "User is not authorized to use page /nPlease Loggin"};
+    const templateVars = { user: users[req.session.user_id], errorMsg: "User is not authorized to use page /nPlease Loggin"};
     return res.render("urls_error", templateVars);
   }
 
@@ -111,7 +124,7 @@ app.get("/urls", (req, res) => {
 //BUG: not redirecting currently
 app.get("/urls/new", (req, res) => {
   //If the user is not logged in, redirect GET /urls/new to GET /login
-  const templateVars = { user: users[req.cookies["user_id"]] };
+  const templateVars = { user: users[req.session.user_id] };
   if (loggedIn(req)){
     res.render("urls_new", templateVars);
 
@@ -132,26 +145,26 @@ app.get("/urls/:id", (req, res) => {
 
     if (req.params.id in urlDatabase){ // valid/existing ID
 
-      if (urlBelongsToUser(req)){ // AND url belongs to user
+      if (urlBelongsToUser(req, urlDatabase)){ // AND url belongs to user
 
         //console.log('   id:', req.params.id, '   longurl pull:', urlDatabase[req.params.id].longURL);
 
-        const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id].longURL, user: users[req.cookies["user_id"]]};
+        const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id].longURL, user: users[req.session.user_id]};
 
         res.render("urls_show", templateVars);
       } else {
         //dont love this for security. exists to spec
-        const templateVars = { user: users[req.cookies["user_id"]], errorMsg: "User does not own this URL"};
+        const templateVars = { user: users[req.session.user_id], errorMsg: "User does not own this URL"};
         res.render("urls_error", templateVars);
 
       }
     } else {
-      const templateVars = { user: users[req.cookies["user_id"]], errorMsg: "Invalid ID"};
+      const templateVars = { user: users[req.session.user_id], errorMsg: "Invalid ID"};
       res.render("urls_error", templateVars);
 
     }
   } else {
-    const templateVars = { user: users[req.cookies["user_id"]], errorMsg: "User is not authorized to use page /nPlease Loggin"};
+    const templateVars = { user: users[req.session.user_id], errorMsg: "User is not authorized to use page /nPlease Loggin"};
     res.render("urls_error", templateVars);
 
   }
@@ -159,7 +172,7 @@ app.get("/urls/:id", (req, res) => {
 
 //can only register if not logged in
 app.get("/register", (req, res) => {
-  const templateVars = { user: users[req.cookies["user_id"]]};
+  const templateVars = { user: users[req.session.user_id]};
   if (!loggedIn(req)){
     res.render("urls_register", templateVars);
   } else {
@@ -168,7 +181,7 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  const templateVars = { user: users[req.cookies["user_id"]]};
+  const templateVars = { user: users[req.session.user_id]};
   if (!loggedIn(req)){
     res.render("urls_login", templateVars);
   } else {
@@ -180,6 +193,7 @@ app.get("/login", (req, res) => {
 //specs ask for 404. use error page?
 //login
 //If a user with that e-mail address is located, compare the password given in the form with the existing user's password. If it does not match, return a response with a 403 status code.
+//check if user is logged in? possible??
 app.post("/login", (req, res) => {
 
   //res.cookie('username', req.body.username);
@@ -195,7 +209,8 @@ app.post("/login", (req, res) => {
     //matching passowrd?
     if (bcrypt.compareSync(inputPassword, registeredEmail.password)){
       console.log('@login post password', registeredEmail.password, '===', inputPassword);
-      res.cookie('user_id', registeredEmail.id);
+      //res.cookie('user_id', registeredEmail.id);
+      req.session.user_id = registeredEmail.id;
       return res.redirect("/urls");
     } else {
       //console.log('@login post password', registeredEmail.password, '!==', inputPassword)
@@ -213,8 +228,11 @@ app.post("/login", (req, res) => {
 //logout
 //logout not secure??? check cookies???
 app.post("/logout", (req, res) => {
-  console.log('@logout post', req.cookies.user_id)
-  res.clearCookie('user_id');
+  console.log('@logout post', req.session.user_id)
+
+  req.session = null
+  //console.log('@logggedout post:', req.session.user_id)
+  //res.clearCookie('user_id');
   res.redirect("/login");
 });
 
@@ -225,7 +243,7 @@ app.post("/urls/:id/delete", (req, res) => {
 
     if (req.params.id in urlDatabase){ // valid/existing ID
 
-      if (urlBelongsToUser(req)){ // AND url belongs to user
+      if (urlBelongsToUser(req, urlDatabase)){ // AND url belongs to user
         delete urlDatabase[req.params.id]
         res.redirect("/urls");
 
@@ -255,10 +273,13 @@ app.post("/urls/new", (req, res) => {
     longURLInput = 'http://www.' + req.body.longURL;
 //validation. could add pop up error message for user, or change redirect
     const shortURL = generateRandomString();
-    //const goURL = `/url/${shortURL}`;
+    const goURL = `/urls/${shortURL}`;
 
-    urlDatabase[shortURL] = longURLInput;
-    //res.redirect(goURL);
+    urlDatabase[shortURL] = {
+      longURL: longURLInput,
+      userID: req.session.user_id
+    }
+    res.redirect(goURL);
 
 
   // necessary????
@@ -291,7 +312,7 @@ app.post("/urls/:id", (req, res) => {
 
     if (req.params.id in urlDatabase){ // valid/existing ID
 
-      if (urlBelongsToUser(req)){ // AND url belongs to user
+      if (urlBelongsToUser(req, urlDatabase)){ // AND url belongs to user
         urlDatabase[req.params.id].longURL = req.body.newURL;
         res.redirect("/urls");
 
@@ -323,7 +344,7 @@ app.post("/register", (req, res) => {
   } else {
     const hashedPassword = bcrypt.hashSync(password, 10);
     console.log('recieved @ register:', email, password, hashedPassword);
-    const id = generateRandomString()
+    const id = generateRandomString();
 
     users[id] = {
       id,
@@ -333,86 +354,14 @@ app.post("/register", (req, res) => {
 
     console.log('just checking', users);
 
-    res.cookie('user_id', id);
+    req.session.user_id = id;
+    //res.cookie('user_id', id);
     res.redirect("/urls");
   }
 
 });
 
-//error:
-//document.getElementById(id).innerHTML = new HTML
-function urlBelongsToUser(req){
-  const userUrls = manyexists(urlDatabase, 'userID', req.cookies["user_id"]);
-  console.log('@urlBelongsToUser t?f', req.params.id, 'belong to :', req.cookies["user_id"],' ->', req.params.id in userUrls)
-  return req.params.id in userUrls;
-}
 
-//more readable? returns true if logged in
-function loggedIn(req){
-  console.log('@loggedIN',req.cookies["user_id"],'  logged in');
-  return (req.cookies["user_id"]);
-}
-
-//return if key? item exists in users (cannot use find, nested obj :()
-//return id?? or user obj??...
-
-/**
- * exists(obj, key, searchItem) - item exists in obj (cannot use find, nested obj :()
- *
- * @param {object} obj - nested object
- * @param {string} key - key associated w search item
- * @param {string} searchItem - value to be found
- * @return {object|null}
-*/
-function exists(obj, key, searchItem) {
-  for (let id in users){
-    if (obj[id][key] === searchItem){
-      //console.log('emAIL exists for login!!!');
-      //res.cookie('user_id', users[id].id);
-      console.log('@exists()', searchItem, 'exists');
-      return obj[id];
-    } //else {
-      //console.log('no email exists @ login')
-    //}
-
-  }
-  console.log('@exists()', searchItem, 'doesnt exist');
-  return null;
-}
-
-/**
- * exists(obj, key, searchItem) - item exists in obj (cannot use find, nested obj :()
- *
- * @param {object} obj - nested object
- * @param {string} key - key associated w search item
- * @param {string} searchItem - value to be found
- * @return {object}
-*/
-function manyexists(obj, key, searchItem) {
-  let results = {};
-  for (let id in obj){
-    console.log('comparing:',obj[id][key],'try to find',searchItem);
-    if (obj[id][key] === searchItem){
-
-      //res.cookie('user_id', users[id].id);
-
-      //return obj[id];
-      results[id] = obj[id];
-    }
-
-  }
-  console.log('@manyexists()', results);
-  return results;
-}
-
-//urlsForUser(id)
-
-//https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
-function generateRandomString() {
-  const crypto = require("crypto");
-  const id = crypto.randomBytes(4).toString('hex');
-  return id;
-}
 
 //would prefer array of users...
 const users = {
