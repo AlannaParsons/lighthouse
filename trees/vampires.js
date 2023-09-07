@@ -39,15 +39,13 @@ class Vampire {
   }
 
   // Returns the closest common ancestor of two vampires
+  // will not return one of the 2 vampires given
   closestCommonAncestor(vampire) {
     let currentVampA = this;
 
     while (vampire.creator){
 
       while(currentVampA.creator){
-        console.log(vampire.name,' (V)created by:', vampire.creator.name)
-        console.log("conamparing")
-        console.log(currentVampA.name,' *(A)created by:', currentVampA.creator.name)
         if (vampire.creator === currentVampA.creator){
           return vampire.creator.name;
         }
