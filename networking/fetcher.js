@@ -99,7 +99,6 @@ function fileCheck(filePath, URL) {
     rl.question(prompt, (answer) => {
       rl.close();
 
-//maybe make terniary?
       if (answer.toUpperCase() !== 'Y') process.exit();
       else { requestInfo(filePath, URL); }
     });

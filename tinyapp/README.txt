@@ -1,5 +1,28 @@
+
+# TinyApp Project
+
+TinyApp is a full stack web application built with Node and Express that allows users to shorten long URLs (à la bit.ly).
 Server generated HTML
 No client side javascript
+
+## Final Product
+
+!["Screenshot of URLs page of logged-in user"](https://github.com/AlannaParsons/lighthouse/blob/main/tinyapp/docs/urls-page.png?raw=true)
+!["Screenshot if URLs:id page. Detailed page of given shortened url, primarily used for editing"](https://github.com/AlannaParsons/lighthouse/blob/main/tinyapp/docs/urls:id-page.png?raw=true)
+
+## Dependencies
+
+- Node.js
+- Express
+- EJS
+- bcryptjs
+- cookie-session
+
+## Getting Started
+
+- Install all dependencies (using the `npm install` command).
+- Run the development web server using the `node express_server.js` command.
+
 
 FUNCTIONALITY
 1 - Add route for /urls in expressserver.js and render using accompanying template
